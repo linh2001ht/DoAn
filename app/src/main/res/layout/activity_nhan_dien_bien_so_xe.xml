@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".NhanDienBienSoXeActivity">
+    <ImageView
+        android:id="@+id/iv_bien"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:src="@drawable/ic_null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_camera"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Open Camera"></Button>
+        <Button
+            android:id="@+id/btn_gallery"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Open Gallery"></Button>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_bien"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:hint="Biển số xe"
+        android:gravity="center"
+        android:background="#999999"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:textSize="25dp"/>
+    <Button
+        android:id="@+id/btn_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check"></Button>
+
+</LinearLayout>
+

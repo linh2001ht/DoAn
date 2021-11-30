@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".ThongTinBienSoXeActivity">
+
+    <EditText
+        android:id="@+id/edit_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginVertical="20dp"
+        android:hint="Nhập biển số xe"
+        android:minHeight="48dp"></EditText>
+
+    <TextView
+        android:id="@+id/selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Loại xe"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"/>
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginVertical="20dp"
+        android:hint="Nhập tên chủ sở hữu"
+        android:minHeight="48dp"></EditText>
+
+</LinearLayout>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".ThongTinLichSuActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/edit_sbsx"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="20dp"
+            android:hint="Nhập biển số xe"
+            android:minHeight="48dp"></EditText>
+        <TextView
+            android:id="@+id/selection1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Loại xe" />
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edit_giave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="20dp"
+            android:hint="Nhập giá vé"
+            android:inputType="number"
+            android:minHeight="48dp"></EditText>
+
+        <EditText
+            android:id="@+id/edit_htcsh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            android:hint="Nhập tên chủ sở hữu"
+            android:minHeight="48dp"></EditText>
+
+        <ImageView
+            android:id="@+id/iv_bien_in"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:src="@drawable/ic_null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_camera_in"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Open Camera"></Button>
+            <Button
+                android:id="@+id/btn_gallery_in"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="Open Gallery"></Button>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edit_time_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            android:hint="Nhập thời gian vào"
+            android:inputType="datetime"
+            android:minHeight="48dp"></EditText>
+
+        <ImageView
+            android:id="@+id/iv_bien_out"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:src="@drawable/ic_null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_camera_out"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Open Camera"></Button>
+            <Button
+                android:id="@+id/btn_gallery_out"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="Open Gallery"></Button>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edit_time_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            android:hint="Nhập thời gian ra"
+            android:inputType="datetime"
+            android:minHeight="48dp"></EditText>
+
+    </LinearLayout>
+
+
+
+
+</ScrollView>
