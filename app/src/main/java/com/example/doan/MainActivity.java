@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,10 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private Button btn1, btn2, btn3, btn4, btn5;
+
+//    private AppDatabase appDatabase;
+//    private AppDao appDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +26,20 @@ public class MainActivity extends AppCompatActivity {
         btn3 = (Button)findViewById(R.id.btn3);
         btn4 = (Button)findViewById(R.id.btn4);
         btn5 = (Button)findViewById(R.id.btn5);
+
+
+//        appDatabase = AppDatabase.getInstance(this);
+//        appDao = appDatabase.appDao();
+//
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                appDao.insertChuSoHuu(...);
+//                appDao.insertBienSoXe(...);
+//            }
+//        });
+
+
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
