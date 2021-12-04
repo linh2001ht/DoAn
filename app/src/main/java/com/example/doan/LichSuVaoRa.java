@@ -21,15 +21,15 @@ public class LichSuVaoRa {
     private String maBSX;
 
     @ColumnInfo
-    private Date tgianvao;
+    private String tgianvao;
 
     @ColumnInfo
-    private Date tgianra;
+    private String tgianra;
 
     @ColumnInfo
     private String anhBSX;
 
-    public LichSuVaoRa(int ID, String maBSX, Date tgianvao, Date tgianra, String anhBSX) {
+    public LichSuVaoRa(int ID, String maBSX, String tgianvao, String tgianra, String anhBSX) {
         this.ID = ID;
         this.maBSX = maBSX;
         this.tgianvao = tgianvao;
@@ -53,19 +53,19 @@ public class LichSuVaoRa {
         this.maBSX = maBSX;
     }
 
-    public Date getTgianvao() {
+    public String getTgianvao() {
         return tgianvao;
     }
 
-    public void setTgianvao(Date tgianvao) {
+    public void setTgianvao(String tgianvao) {
         this.tgianvao = tgianvao;
     }
 
-    public Date getTgianra() {
+    public String getTgianra() {
         return tgianra;
     }
 
-    public void setTgianra(Date tgianra) {
+    public void setTgianra(String tgianra) {
         this.tgianra = tgianra;
     }
 

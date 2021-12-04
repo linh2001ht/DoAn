@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
         onDelete = ForeignKey.CASCADE)
 })
 public class BienSoXe {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     private String  maBSX;
 
     @ColumnInfo
