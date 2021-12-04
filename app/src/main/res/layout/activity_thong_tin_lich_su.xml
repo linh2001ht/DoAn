@@ -11,41 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <EditText
-            android:id="@+id/edit_sbsx"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginVertical="20dp"
-            android:hint="Nhập biển số xe"
-            android:minHeight="48dp"></EditText>
+            android:layout_marginTop="20dp"
+            android:hint="Mã biển số xe" />
+        <Spinner
+            android:id="@+id/ls_maBSX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></Spinner>
         <TextView
             android:id="@+id/selection1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="Loại xe" />
         <Spinner
             android:id="@+id/spinner"
+            android:entries="@array/loaixe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/edit_giave"
+            android:id="@+id/ls_giave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="20dp"
             android:hint="Nhập giá vé"
             android:inputType="number"
-            android:minHeight="48dp"></EditText>
-
-        <EditText
-            android:id="@+id/edit_htcsh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="20dp"
-            android:hint="Nhập tên chủ sở hữu"
             android:minHeight="48dp"></EditText>
 
         <ImageView

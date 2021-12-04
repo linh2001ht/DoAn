@@ -3,18 +3,25 @@ package com.example.doan;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,63 +37,86 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ThongTinLichSuActivity extends AppCompatActivity {
-    String arr[]={
-            "Ô tô",
-            "Xe máy"};
 
     public static final int CAMERA_REQUEST_CODE_IN = 102;
     public static final int GALLERY_REQUEST_CODE_IN = 103;
     public static final int CAMERA_REQUEST_CODE_OUT = 104;
     public static final int GALLERY_REQUEST_CODE_OUT = 105;
-    private String currentPhotoPath;
-
-    FirebaseStorage storage;
-    StorageReference storageReference;
-    FirebaseDatabase rootNode;
-    DatabaseReference myRef;
+    private static byte[] imgIn, imgOut;
     private ImageView imageViewIn, imageViewOut;
-
+    private String maBSX, idCSH;
+    private int id;
+    private EditText lsGiaVe, editTimeIn, editTimeOut;
+    private Spinner lsLoaiXe, lsMaBSX;
     private Button btnCameraIn, btnGalleryIn, btnCameraOut, btnGalleryOut;
+    private AppDatabase appDatabase;
+    private AppDao appDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thong_tin_lich_su);
-        Spinner spin= findViewById(R.id.spinner);
+        lsLoaiXe= findViewById(R.id.spinner);
         btnCameraIn = findViewById(R.id.btn_camera_in);
         btnGalleryIn = findViewById(R.id.btn_gallery_in);
         btnGalleryOut = findViewById(R.id.btn_gallery_out);
         btnCameraOut = findViewById(R.id.btn_camera_out);
         imageViewIn = findViewById(R.id.iv_bien_in);
         imageViewOut = findViewById(R.id.iv_bien_out);
+        lsMaBSX = findViewById(R.id.ls_maBSX);
+        lsGiaVe = findViewById(R.id.ls_giave);
+        editTimeIn = findViewById(R.id.edit_time_in);
+        editTimeOut = findViewById(R.id.edit_time_out);
+        appDatabase = AppDatabase.getInstance(this);
+        appDao = appDatabase.appDao();
+        ArrayAdapter<BienSoXe> adapter = new ArrayAdapter<BienSoXe>(this,
+                android.R.layout.simple_spinner_item,
+                appDao.getAllBienSoXe());
+
+        // Layout for All ROWs of Spinner.  (Optional for ArrayAdapter).
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        lsMaBSX.setAdapter(adapter);
+
+
+        Intent receive = getIntent();
+        LichSuVaoRa lichSuVaoRa = (LichSuVaoRa) receive.getSerializableExtra("data");
+        if (lichSuVaoRa != null){
+            this.setTitle("Sửa lịch sử");
+            id = lichSuVaoRa.getID();
+            int position = -1;
+            for (LichSuVaoRa x:appDao.getAllLichSu()) {
+                position += 1;
+                if (x.getMaBSX() == lichSuVaoRa.getMaBSX()) break;
+            }
+            lsMaBSX.setSelection(position);
+            editTimeIn.setText(lichSuVaoRa.getTgianvao());
+            editTimeOut.setText(lichSuVaoRa.getTgianra());
+//            byte[] imgIn = receive.getByteArrayExtra("imgIn");
+//            if (imgIn != null){
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(imgIn,0,imgIn.length);
+//                imageViewIn.setImageBitmap(bitmap);
+//            }
+//            byte[] imgOut = receive.getByteArrayExtra("imgOut");
+//            if (imgIn != null){
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(imgOut,0,imgOut.length);
+//                imageViewOut.setImageBitmap(bitmap);
+//            }
+        } else {
+            this.setTitle("Thêm lịch sử");
+        }
 
         btnCameraIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-
-                    }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(ThongTinLichSuActivity.this,
-                                "net.example.android.fileprovider",
-                                photoFile);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        startActivityForResult(intent, CAMERA_REQUEST_CODE_IN);
-                    }
-                }
+                startActivityForResult(intent, CAMERA_REQUEST_CODE_IN);
             }
         });
         btnGalleryIn.setOnClickListener(new View.OnClickListener() {
@@ -101,24 +131,7 @@ public class ThongTinLichSuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-
-                    }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(ThongTinLichSuActivity.this,
-                                "net.example.android.fileprovider",
-                                photoFile);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        startActivityForResult(intent, CAMERA_REQUEST_CODE_OUT);
-                    }
-                }
+                startActivityForResult(intent, CAMERA_REQUEST_CODE_OUT);
             }
         });
         btnGalleryOut.setOnClickListener(new View.OnClickListener() {
@@ -129,17 +142,6 @@ public class ThongTinLichSuActivity extends AppCompatActivity {
             }
         });
 
-
-
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>
-                (
-                        this,
-                        android.R.layout.simple_spinner_item,
-                        arr
-                );
-        adapter.setDropDownViewResource
-                (android.R.layout.simple_list_item_single_choice);
-        spin.setAdapter(adapter);
     }
 
     @Override
@@ -153,13 +155,9 @@ public class ThongTinLichSuActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST_CODE_IN) {
             if (resultCode == Activity.RESULT_OK) {
-                File f = new File(currentPhotoPath);
-                imageViewIn.setImageURI(Uri.fromFile(f));
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                this.sendBroadcast(mediaScanIntent);
-                uploadImageToFirebase(f.getName(), contentUri);
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                imageViewIn.setImageBitmap(bitmap);
+                imgIn = imageViewToByte(imageViewIn);
             }
 
         }
@@ -167,81 +165,64 @@ public class ThongTinLichSuActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST_CODE_IN) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri contentUri = data.getData();
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
                 imageViewIn.setImageURI(contentUri);
-                uploadImageToFirebase(imageFileName, contentUri);
+                imgIn = imageViewToByte(imageViewIn);
+
             }
         }
 
         if (requestCode == CAMERA_REQUEST_CODE_OUT) {
             if (resultCode == Activity.RESULT_OK) {
-                File f = new File(currentPhotoPath);
-                imageViewOut.setImageURI(Uri.fromFile(f));
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                this.sendBroadcast(mediaScanIntent);
-                uploadImageToFirebase(f.getName(), contentUri);
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                imageViewOut.setImageBitmap(bitmap);
+                imgOut = imageViewToByte(imageViewOut);
             }
         }
 
         if (requestCode == GALLERY_REQUEST_CODE_OUT) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri contentUri = data.getData();
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
                 imageViewOut.setImageURI(contentUri);
-                uploadImageToFirebase(imageFileName, contentUri);
+                imgOut = imageViewToByte(imageViewOut);
             }
         }
 
 
     }
 
-    private void uploadImageToFirebase(String name, Uri contentUri) {
-        final StorageReference image = storageReference.child("pictures/" + name);
-        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.d("tag", "onSuccess: Uploaded Image URl is " + uri.toString());
-                    }
-                });
-
-                Toast.makeText(ThongTinLichSuActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ThongTinLichSuActivity.this, "Upload Failed.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+    public static byte[] imageViewToByte(ImageView image) {
+        try {
+            Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            return byteArray;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    private String getFileExt(Uri contentUri) {
-        ContentResolver c = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    public void sendData(){
+        String maBSX = lsMaBSX.getSelectedItem().toString();
+        String timeIn = editTimeIn.getText().toString();
+        String timeOut = editTimeOut.getText().toString();
+        int loaixe = (int) lsLoaiXe.getSelectedItemId()+1;
+        LichSuVaoRa lichSuVaoRa = new LichSuVaoRa(id, maBSX, timeIn, timeOut, null);
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("data", lichSuVaoRa);
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_Ok:
+                sendData();
+                break;
+            case R.id.action_Cancel:
+                this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
-
 }

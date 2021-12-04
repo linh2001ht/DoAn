@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">DoAn</string>
+    <string-array name="loaixe">
+        <item>Ô tô</item>
+        <item>Xe máy</item>
+    </string-array>
 </resources>
