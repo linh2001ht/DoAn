@@ -17,7 +17,7 @@ public interface AppDao {
     @Query("SELECT * FROM ChuSoHuu where IDchusohuu=:id")
     public ChuSoHuu findCSHByIDChuSoHuu(int id);
 
-    @Query("SELECT * FROM ChuSoHuu where name=:name")
+    @Query("SELECT * FROM ChuSoHuu where name like :name")
     public ChuSoHuu findCSHByName(String name);
 
     @Insert
