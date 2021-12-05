@@ -19,7 +19,7 @@ public class ChuSoHuu {
     private Boolean gioitinh;
 
     @ColumnInfo
-    private Date ngaysinh;
+    private String ngaysinh;
 
     @ColumnInfo
     private String phone;
@@ -30,7 +30,7 @@ public class ChuSoHuu {
     @ColumnInfo
     private Byte[] anhcccd;
 
-    public ChuSoHuu(int IDchusohuu, String name, Boolean gioitinh, Date ngaysinh, String phone, String address, Byte[] anhcccd) {
+    public ChuSoHuu(int IDchusohuu, String name, Boolean gioitinh, String ngaysinh, String phone, String address, Byte[] anhcccd) {
         this.IDchusohuu = IDchusohuu;
         this.name = name;
         this.gioitinh = gioitinh;
@@ -64,11 +64,11 @@ public class ChuSoHuu {
         this.gioitinh = gioitinh;
     }
 
-    public Date getNgaysinh() {
+    public String getNgaysinh() {
         return ngaysinh;
     }
 
-    public void setNgaysinh(Date ngaysinh) {
+    public void setNgaysinh(String ngaysinh) {
         this.ngaysinh = ngaysinh;
     }
 
