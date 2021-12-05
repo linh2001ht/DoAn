@@ -27,13 +27,17 @@ public class ChuSoHuu {
     @ColumnInfo
     private String address;
 
-    public ChuSoHuu(int IDchusohuu, String name, Boolean gioitinh, Date ngaysinh, String phone, String address) {
+    @ColumnInfo
+    private Byte[] anhcccd;
+
+    public ChuSoHuu(int IDchusohuu, String name, Boolean gioitinh, Date ngaysinh, String phone, String address, Byte[] anhcccd) {
         this.IDchusohuu = IDchusohuu;
         this.name = name;
         this.gioitinh = gioitinh;
         this.ngaysinh = ngaysinh;
         this.phone = phone;
         this.address = address;
+        this.anhcccd = anhcccd;
     }
 
     public int getIDchusohuu() {
@@ -82,5 +86,13 @@ public class ChuSoHuu {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Byte[] getAnhcccd() {
+        return anhcccd;
+    }
+
+    public void setAnhcccd(Byte[] anhcccd) {
+        this.anhcccd = anhcccd;
     }
 }

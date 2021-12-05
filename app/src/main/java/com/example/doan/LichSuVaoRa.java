@@ -27,9 +27,9 @@ public class LichSuVaoRa {
     private String tgianra;
 
     @ColumnInfo
-    private String anhBSX;
+    private Byte[] anhBSX;
 
-    public LichSuVaoRa(int ID, String maBSX, String tgianvao, String tgianra, String anhBSX) {
+    public LichSuVaoRa(int ID, String maBSX, String tgianvao, String tgianra, Byte[] anhBSX) {
         this.ID = ID;
         this.maBSX = maBSX;
         this.tgianvao = tgianvao;
@@ -69,11 +69,11 @@ public class LichSuVaoRa {
         this.tgianra = tgianra;
     }
 
-    public String getAnhBSX() {
+    public Byte[] getAnhBSX() {
         return anhBSX;
     }
 
-    public void setAnhBSX(String anhBSX) {
+    public void setAnhBSX(Byte[] anhBSX) {
         this.anhBSX = anhBSX;
     }
 }
