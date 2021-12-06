@@ -13,27 +13,26 @@
     <Button
         android:id="@+id/btn1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Nhận diện biển số xe"/>
-    <Button
-        android:id="@+id/btn2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Quản lý thông tin biển số xe"/>
+
     <Button
         android:id="@+id/btn3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Quản lý thông tin chủ sở hữu"/>
+        android:layout_height="50dp"
+        android:text="Danh sách chủ sở hữu"/>
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Danh sách biển số xe"/>
+
     <Button
         android:id="@+id/btn4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Quản lý lịch sử vào ra"/>
-    <Button
-        android:id="@+id/btn5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Quản lý doanh thu"/>
+        android:layout_height="50dp"
+        android:text="Danh sách lịch sử vào ra"/>
+
 
 </LinearLayout>

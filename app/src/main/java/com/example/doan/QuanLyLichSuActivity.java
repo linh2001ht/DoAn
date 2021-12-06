@@ -1,23 +1,20 @@
 package com.example.doan;
 
+import android.content.Intent;
+import android.database.DataSetObserver;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -26,9 +23,8 @@ public class QuanLyLichSuActivity extends AppCompatActivity {
     public static final int REQUEST_EDIT_LS = 666;
     private ArrayAdapter<LichSuVaoRa> arrayAdapter;
     private ArrayList<LichSuVaoRa> arrayList;
-    private AppDatabase appDatabase;
     private AppDao appDao;
-    private ListView lvLS;
+    private TextView tvSumIn, tvSumIn1, tvSumIn2, tvSumOut, tvSumOut1, tvSumOut2, tvSum;
     private int idx;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,73 +33,97 @@ public class QuanLyLichSuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quan_ly_lich_su);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        lvLS = findViewById(R.id.lv_ls);
-
-        appDatabase = AppDatabase.getInstance(this);
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
         appDao = appDatabase.appDao();
 
-        arrayList = new ArrayList<LichSuVaoRa>();
-        arrayList.addAll(appDao.getAllLichSu());
+        ListView lvLS = findViewById(R.id.lv_ls);
+        tvSum = findViewById(R.id.tv_sumall);
+        tvSumIn = findViewById(R.id.tv_sumin);
+        tvSumIn1 = findViewById(R.id.tv_sumin1);
+        tvSumIn2 = findViewById(R.id.tv_sumin2);
+        tvSumOut = findViewById(R.id.tv_sumout);
+        tvSumOut1 = findViewById(R.id.tv_sumout1);
+        tvSumOut2 = findViewById(R.id.tv_sumout2);
 
-        for(LichSuVaoRa x:arrayList) {
-            Log.d("qq", x.toString());
-        }
+        arrayList = new ArrayList<>();
 
-        arrayAdapter = new ArrayAdapter<LichSuVaoRa>(this, android.R.layout.simple_list_item_1, arrayList);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
         lvLS.setAdapter(arrayAdapter);
 
-
-        lvLS.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        arrayAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                LichSuVaoRa lichSuVaoRa = arrayAdapter.getItem(position);
-                AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyLichSuActivity.this);
-
-                builder.setTitle("Confirm");
-                builder.setMessage("Bạn có muốn xóa lịch sử?");
-
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        appDao.deleteLichSu(lichSuVaoRa);
-                        arrayList.remove(position);
-                        arrayAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
+            public void onChanged() {
+                super.onChanged();
+                int sumin1 = 0, sumin2 = 0, sumout1 = 0, sumout2 = 0, sumall = 0;
+                for(LichSuVaoRa lichSuVaoRa:arrayList) {
+                    BienSoXe bienSoXe = appDao.findBymaBSX(lichSuVaoRa.getMaBSX());
+                    if (bienSoXe.getLoaixe() == 0) {
+                        if (lichSuVaoRa.getTgianvao() != null) {
+                            sumin1 += 1;
+                            if (lichSuVaoRa.getTgianra() != null) {
+                                sumout1 += 1;
+                                sumall += lichSuVaoRa.getGiave();
+                            }
+                        }
+                    } else {
+                        if (lichSuVaoRa.getTgianvao() != null) {
+                            sumin2 += 1;
+                            if (lichSuVaoRa.getTgianra() != null) {
+                                sumout2 += 1;
+                                sumall += lichSuVaoRa.getGiave();
+                            }
+                        }
                     }
-                });
-
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog alert = builder.create();
-                alert.show();
-                return true;
+                }
+                tvSum.setText(""+sumall);
+                tvSumIn.setText(""+(sumin1+sumin2));
+                tvSumIn1.setText(""+sumin1);
+                tvSumIn2.setText(""+sumin2);
+                tvSumOut.setText(""+(sumout1+sumout2));
+                tvSumOut1.setText(""+sumout1);
+                tvSumOut2.setText(""+sumout2);
             }
         });
 
-        lvLS.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(QuanLyLichSuActivity.this, ThongTinLichSuActivity.class);
-                idx = position;
-                LichSuVaoRa lichSuVaoRa = arrayList.get(position);
-                intent.putExtra("data", lichSuVaoRa);
-                startActivityForResult(intent, REQUEST_EDIT_LS);
-            }
+        arrayList.addAll(appDao.getAllLichSu());
+        arrayAdapter.notifyDataSetChanged();
+
+
+        lvLS.setOnItemLongClickListener((adapterView, view, position, id) -> {
+            LichSuVaoRa lichSuVaoRa = arrayAdapter.getItem(position);
+            AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyLichSuActivity.this);
+
+            builder.setTitle("Confirm");
+            builder.setMessage("Bạn có muốn xóa lịch sử?");
+
+            builder.setPositiveButton("YES", (dialog, which) -> {
+                appDao.deleteLichSu(lichSuVaoRa);
+                arrayList.remove(position);
+                arrayAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            });
+
+            builder.setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
+
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
+        });
+
+        lvLS.setOnItemClickListener((adapterView, view, position, id) -> {
+            Intent intent = new Intent(QuanLyLichSuActivity.this, ThongTinLichSuActivity.class);
+            idx = position;
+            LichSuVaoRa lichSuVaoRa = arrayList.get(position);
+            intent.putExtra("data", lichSuVaoRa);
+            startActivityForResult(intent, REQUEST_EDIT_LS);
         });
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -123,6 +143,9 @@ public class QuanLyLichSuActivity extends AppCompatActivity {
             }
             @Override
             public boolean onQueryTextChange(String s) {
+                arrayList.clear();
+                arrayList.addAll(appDao.getLichSus(s));
+                arrayAdapter.notifyDataSetChanged();
                 return false;
             }
         });
@@ -137,7 +160,6 @@ public class QuanLyLichSuActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("qq", "qqqqq--");
 
         if (requestCode == REQUEST_ADD_LS && resultCode == RESULT_OK && data != null) {
             LichSuVaoRa lichSuVaoRa = (LichSuVaoRa) data.getSerializableExtra("data");
@@ -148,8 +170,11 @@ public class QuanLyLichSuActivity extends AppCompatActivity {
         if (requestCode == REQUEST_EDIT_LS && resultCode == RESULT_OK && data != null) {
             LichSuVaoRa lichSuVaoRa = (LichSuVaoRa) data.getSerializableExtra("data");
             arrayList.set(idx, lichSuVaoRa);
-            appDao.updateLichSu(lichSuVaoRa.getID(), lichSuVaoRa.getMaBSX(), lichSuVaoRa.getTgianvao(), lichSuVaoRa.getTgianra());
+            appDao.updateLichSu(lichSuVaoRa.getID(), lichSuVaoRa.getMaBSX(), lichSuVaoRa.getGiave(), lichSuVaoRa.getAnhBSXvao(), lichSuVaoRa.getTgianvao(), lichSuVaoRa.getAnhBSXra(), lichSuVaoRa.getTgianra());
             arrayAdapter.notifyDataSetChanged();
         }
     }
+
+
+
 }

@@ -23,9 +23,6 @@
             android:name=".ThongTinBienSoXeActivity"
             android:exported="true" />
         <activity
-            android:name=".QuanLyDoanhThuActivity"
-            android:exported="true" />
-        <activity
             android:name=".QuanLyLichSuActivity"
             android:exported="true" />
         <activity

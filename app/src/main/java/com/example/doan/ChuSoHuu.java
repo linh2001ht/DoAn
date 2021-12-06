@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,7 +23,8 @@ public class ChuSoHuu implements Serializable {
     private Boolean gioitinh;
 
     @ColumnInfo
-    private String ngaysinh;
+    @TypeConverters({DateConverter.class})
+    private Date ngaysinh;
 
     @ColumnInfo
     private String phone;
@@ -30,13 +32,17 @@ public class ChuSoHuu implements Serializable {
     @ColumnInfo
     private String address;
 
-    public ChuSoHuu(int IDchusohuu, String name, Boolean gioitinh, String ngaysinh, String phone, String address) {
+    @ColumnInfo
+    private byte[] anhcccd;
+
+    public ChuSoHuu(int IDchusohuu, String name, Boolean gioitinh, Date ngaysinh, String phone, String address, byte[] anhcccd) {
         this.IDchusohuu = IDchusohuu;
         this.name = name;
         this.gioitinh = gioitinh;
         this.ngaysinh = ngaysinh;
         this.phone = phone;
         this.address = address;
+        this.anhcccd = anhcccd;
     }
 
     public int getIDchusohuu() {
@@ -63,11 +69,11 @@ public class ChuSoHuu implements Serializable {
         this.gioitinh = gioitinh;
     }
 
-    public String getNgaysinh() {
+    public Date getNgaysinh() {
         return ngaysinh;
     }
 
-    public void setNgaysinh(String ngaysinh) {
+    public void setNgaysinh(Date ngaysinh) {
         this.ngaysinh = ngaysinh;
     }
 
@@ -85,6 +91,14 @@ public class ChuSoHuu implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public byte[] getAnhcccd() {
+        return anhcccd;
+    }
+
+    public void setAnhcccd(byte[] anhcccd) {
+        this.anhcccd = anhcccd;
     }
 
     @Override

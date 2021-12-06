@@ -1,19 +1,14 @@
 package com.example.doan;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,19 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ThongTinBienSoXeActivity extends AppCompatActivity {
     private Spinner bsxLoaiXe, bsxIdCSH;
     private EditText bsxMaBSX;
-    private boolean isEdit;
-    private AppDatabase appDatabase;
-    private AppDao appDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Thông tin biển số xe");
         setContentView(R.layout.activity_thong_tin_bien_so_xe);
-        appDatabase = AppDatabase.getInstance(this);
-        appDao = appDatabase.appDao();
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
+        AppDao appDao = appDatabase.appDao();
         bsxMaBSX = findViewById(R.id.bsx_maBSX);
         bsxIdCSH = findViewById(R.id.bsx_idCHS);
-        ArrayAdapter<ChuSoHuu> adapter = new ArrayAdapter<ChuSoHuu>(this,
+        ArrayAdapter<ChuSoHuu> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 appDao.getAllChuSoHuu());
 
@@ -48,6 +41,7 @@ public class ThongTinBienSoXeActivity extends AppCompatActivity {
         if (bienSoXe != null){
             this.setTitle("Sửa biển số xe");
             bsxIdCSH.setSelection(bienSoXe.getIDChuSoHuu()-1);
+            bsxLoaiXe.setSelection(bienSoXe.getLoaixe());
             bsxMaBSX.setText(bienSoXe.getMaBSX());
         } else {
             this.setTitle("Thêm biển số xe");
@@ -58,11 +52,10 @@ public class ThongTinBienSoXeActivity extends AppCompatActivity {
     public void sendData(){
         String maBSX = bsxMaBSX.getText().toString();
         int idCSH = (int) bsxIdCSH.getSelectedItemId()+1;
-        int loaixe = (int) bsxLoaiXe.getSelectedItemId()+1;
-        BienSoXe bienSoXe = new BienSoXe(maBSX, idCSH);
+        int loaixe =(int) bsxLoaiXe.getSelectedItemId();
+        BienSoXe bienSoXe = new BienSoXe(maBSX, loaixe, idCSH);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("data", bienSoXe);
-        Log.d("qq", "qqqq"+bienSoXe.getIDChuSoHuu());
         setResult(Activity.RESULT_OK,returnIntent);
         finish();
     }
@@ -73,15 +66,18 @@ public class ThongTinBienSoXeActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_Ok:
                 sendData();
-                break;
+                return true;
             case R.id.action_Cancel:
                 this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

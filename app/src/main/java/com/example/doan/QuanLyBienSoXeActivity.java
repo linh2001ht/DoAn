@@ -1,12 +1,10 @@
 package com.example.doan;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -24,9 +22,7 @@ public class QuanLyBienSoXeActivity extends AppCompatActivity {
     public static final int REQUEST_EDIT_BSX = 444;
     private ArrayAdapter<BienSoXe> arrayAdapter;
     private ArrayList<BienSoXe> arrayList;
-    private AppDatabase appDatabase;
     private AppDao appDao;
-    private ListView lvBsx;
     private int idx;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,65 +32,50 @@ public class QuanLyBienSoXeActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        lvBsx = findViewById(R.id.lv_bsx);
+        ListView lvBsx = findViewById(R.id.lv_bsx);
 
-        arrayList = new ArrayList<BienSoXe>();
-        appDatabase = AppDatabase.getInstance(this);
+        arrayList = new ArrayList<>();
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
         appDao = appDatabase.appDao();
         arrayList.addAll(appDao.getAllBienSoXe());
-        arrayAdapter = new ArrayAdapter<BienSoXe>(this, android.R.layout.simple_list_item_1, arrayList);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
         lvBsx.setAdapter(arrayAdapter);
 
 
-        lvBsx.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                BienSoXe bienSoXe = arrayAdapter.getItem(position);
-                AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyBienSoXeActivity.this);
+        lvBsx.setOnItemLongClickListener((adapterView, view, position, id) -> {
+            BienSoXe bienSoXe = arrayAdapter.getItem(position);
+            AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyBienSoXeActivity.this);
 
-                builder.setTitle("Confirm");
-                builder.setMessage("Bạn có muốn xóa biển số xe?");
+            builder.setTitle("Confirm");
+            builder.setMessage("Bạn có muốn xóa biển số xe?");
 
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        appDao.deleteBienSoXe(bienSoXe);
-                        arrayList.remove(position);
-                        arrayAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                    }
-                });
+            builder.setPositiveButton("YES", (dialog, which) -> {
+                appDao.deleteBienSoXe(bienSoXe);
+                arrayList.remove(position);
+                arrayAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            });
 
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog alert = builder.create();
-                alert.show();
-                return true;
-            }
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
         });
 
-        lvBsx.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(QuanLyBienSoXeActivity.this, ThongTinBienSoXeActivity.class);
-                BienSoXe bienSoXe = arrayList.get(position);
-                intent.putExtra("data", bienSoXe);
-                idx = position;
-                startActivityForResult(intent, REQUEST_EDIT_BSX);
-            }
+        lvBsx.setOnItemClickListener((adapterView, view, position, id) -> {
+            Intent intent = new Intent(QuanLyBienSoXeActivity.this, ThongTinBienSoXeActivity.class);
+            BienSoXe bienSoXe = arrayList.get(position);
+            intent.putExtra("data", bienSoXe);
+            idx = position;
+            startActivityForResult(intent, REQUEST_EDIT_BSX);
         });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -113,7 +94,10 @@ public class QuanLyBienSoXeActivity extends AppCompatActivity {
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                return false;
+                arrayList.clear();
+                arrayList.addAll(appDao.getBienSoXes(s));
+                arrayAdapter.notifyDataSetChanged();
+                return true;
             }
         });
         return true;
@@ -136,7 +120,7 @@ public class QuanLyBienSoXeActivity extends AppCompatActivity {
         if (requestCode == REQUEST_EDIT_BSX && resultCode == RESULT_OK && data != null) {
             BienSoXe bienSoXe = (BienSoXe) data.getSerializableExtra("data");
             arrayList.set(idx, bienSoXe);
-            appDao.updateBienSoXe(bienSoXe.getMaBSX(), bienSoXe.getIDChuSoHuu());
+            appDao.updateBienSoXe(bienSoXe.getMaBSX(), bienSoXe.getLoaixe(), bienSoXe.getIDChuSoHuu());
             arrayAdapter.notifyDataSetChanged();
         }
     }

@@ -1,21 +1,18 @@
 package com.example.doan;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import java.util.ArrayList;
 
@@ -24,9 +21,7 @@ public class QuanLyChuSoHuuActivity extends AppCompatActivity {
     public static final int REQUEST_EDIT_CSH = 222;
     private ArrayAdapter<ChuSoHuu> arrayAdapter;
     private ArrayList<ChuSoHuu> arrayList;
-    private AppDatabase appDatabase;
     private AppDao appDao;
-    private ListView lvCSH;
     private int idx;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,65 +31,50 @@ public class QuanLyChuSoHuuActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        lvCSH = findViewById(R.id.lv_csh);
-        appDatabase = AppDatabase.getInstance(this);
+        ListView lvCSH = findViewById(R.id.lv_csh);
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
         appDao = appDatabase.appDao();
-        arrayList = new ArrayList<ChuSoHuu>();
+        arrayList = new ArrayList<>();
         arrayList.addAll(appDao.getAllChuSoHuu());
-        arrayAdapter = new ArrayAdapter<ChuSoHuu>(this, android.R.layout.simple_list_item_1, arrayList);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
         lvCSH.setAdapter(arrayAdapter);
 
 
 
-        lvCSH.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                ChuSoHuu chuSoHuu = arrayAdapter.getItem(position);
-                AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyChuSoHuuActivity.this);
+        lvCSH.setOnItemLongClickListener((adapterView, view, position, id) -> {
+            ChuSoHuu chuSoHuu = arrayAdapter.getItem(position);
+            AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyChuSoHuuActivity.this);
 
-                builder.setTitle("Confirm");
-                builder.setMessage("Bạn có muốn xóa chủ sở hữu?");
+            builder.setTitle("Confirm");
+            builder.setMessage("Bạn có muốn xóa chủ sở hữu?");
 
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        appDao.deleteChuSoHuu(chuSoHuu);
-                        arrayList.remove(position);
-                        arrayAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                    }
-                });
+            builder.setPositiveButton("YES", (dialog, which) -> {
+                appDao.deleteChuSoHuu(chuSoHuu);
+                arrayList.remove(position);
+                arrayAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            });
 
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog alert = builder.create();
-                alert.show();
-                return true;
-            }
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
         });
 
-        lvCSH.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(QuanLyChuSoHuuActivity.this, ThongTinChuSoHuuActivity.class);
-                ChuSoHuu chuSoHuu = arrayAdapter.getItem(position);
-                intent.putExtra("data", chuSoHuu);
-                idx = position;
-                startActivityForResult(intent, REQUEST_EDIT_CSH);
-            }
+        lvCSH.setOnItemClickListener((adapterView, view, position, id) -> {
+            Intent intent = new Intent(QuanLyChuSoHuuActivity.this, ThongTinChuSoHuuActivity.class);
+            ChuSoHuu chuSoHuu = arrayAdapter.getItem(position);
+            intent.putExtra("data", chuSoHuu);
+            idx = position;
+            startActivityForResult(intent, REQUEST_EDIT_CSH);
         });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -115,7 +95,10 @@ public class QuanLyChuSoHuuActivity extends AppCompatActivity {
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                return false;
+                arrayList.clear();
+                arrayList.addAll(appDao.getChuSoHuus(s));
+                arrayAdapter.notifyDataSetChanged();
+                return true;
             }
         });
         return true;
@@ -138,7 +121,7 @@ public class QuanLyChuSoHuuActivity extends AppCompatActivity {
         if (requestCode == REQUEST_EDIT_CSH && resultCode == RESULT_OK && data != null) {
             ChuSoHuu chuSoHuu = (ChuSoHuu) data.getSerializableExtra("data");
             arrayList.set(idx, chuSoHuu);
-            appDao.updateChuSoHuu(chuSoHuu.getIDchusohuu(), chuSoHuu.getName(), chuSoHuu.getGioitinh(), chuSoHuu.getNgaysinh(), chuSoHuu.getPhone(), chuSoHuu.getAddress());
+            appDao.updateChuSoHuu(chuSoHuu.getIDchusohuu(), chuSoHuu.getName(), chuSoHuu.getGioitinh(), chuSoHuu.getNgaysinh(), chuSoHuu.getPhone(), chuSoHuu.getAddress(), chuSoHuu.getAnhcccd());
             arrayAdapter.notifyDataSetChanged();
         }
     }

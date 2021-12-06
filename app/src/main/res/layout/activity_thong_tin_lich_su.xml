@@ -20,17 +20,6 @@
             android:id="@+id/ls_maBSX"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></Spinner>
-        <TextView
-            android:id="@+id/selection1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="Loại xe" />
-        <Spinner
-            android:id="@+id/spinner"
-            android:entries="@array/loaixe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/ls_giave"
@@ -45,29 +34,11 @@
         <ImageView
             android:id="@+id/iv_bien_in"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:src="@drawable/ic_null"
+            android:layout_height="300dp"
+            android:background="#C4C4C4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btn_camera_in"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Open Camera"></Button>
-            <Button
-                android:id="@+id/btn_gallery_in"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Open Gallery"></Button>
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <EditText
             android:id="@+id/edit_time_in"
@@ -75,35 +46,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="20dp"
-            android:hint="Nhập thời gian vào"
+            android:hint="Nhập thời gian vào (dd/MM/yyyy HH:mm:ss)"
             android:inputType="datetime"
             android:minHeight="48dp"></EditText>
 
         <ImageView
             android:id="@+id/iv_bien_out"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:src="@drawable/ic_null"
+            android:layout_height="300dp"
+            android:background="#C4C4C4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btn_camera_out"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Open Camera"></Button>
-            <Button
-                android:id="@+id/btn_gallery_out"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Open Gallery"></Button>
-        </LinearLayout>
 
         <EditText
             android:id="@+id/edit_time_out"
@@ -111,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="20dp"
-            android:hint="Nhập thời gian ra"
+            android:hint="Nhập thời gian ra (dd/MM/yyyy HH:mm:ss)"
             android:inputType="datetime"
             android:minHeight="48dp"></EditText>
 

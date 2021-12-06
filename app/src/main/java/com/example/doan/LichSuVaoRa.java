@@ -3,16 +3,20 @@ package com.example.doan;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity(foreignKeys = {@ForeignKey(entity = BienSoXe.class,
         parentColumns = "maBSX",
         childColumns = "maBSX",
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE)
-})
+},
+        indices = {@Index("maBSX")})
 public class LichSuVaoRa implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int ID;
@@ -21,20 +25,30 @@ public class LichSuVaoRa implements Serializable {
     private String maBSX;
 
     @ColumnInfo
-    private String tgianvao;
+    private int giave;
 
     @ColumnInfo
-    private String tgianra;
+    private byte[] anhBSXvao;
 
     @ColumnInfo
-    private String anhBSX;
+    @TypeConverters({TimestampConverter.class})
+    private Date tgianvao;
 
-    public LichSuVaoRa(int ID, String maBSX, String tgianvao, String tgianra, String anhBSX) {
+    @ColumnInfo
+    private byte[] anhBSXra;
+
+    @ColumnInfo
+    @TypeConverters({TimestampConverter.class})
+    private Date tgianra;
+
+    public LichSuVaoRa(int ID, String maBSX, int giave, byte[] anhBSXvao, Date tgianvao, byte[] anhBSXra, Date tgianra) {
         this.ID = ID;
         this.maBSX = maBSX;
+        this.giave = giave;
+        this.anhBSXvao = anhBSXvao;
         this.tgianvao = tgianvao;
+        this.anhBSXra = anhBSXra;
         this.tgianra = tgianra;
-        this.anhBSX = anhBSX;
     }
 
     public int getID() {
@@ -53,32 +67,53 @@ public class LichSuVaoRa implements Serializable {
         this.maBSX = maBSX;
     }
 
-    public String getTgianvao() {
+    public int getGiave() {
+        return giave;
+    }
+
+    public void setGiave(int giave) {
+        this.giave = giave;
+    }
+
+    public byte[] getAnhBSXvao() {
+        return anhBSXvao;
+    }
+
+    public void setAnhBSXvao(byte[] anhBSXvao) {
+        this.anhBSXvao = anhBSXvao;
+    }
+
+    public Date getTgianvao() {
         return tgianvao;
     }
 
-    public void setTgianvao(String tgianvao) {
+    public void setTgianvao(Date tgianvao) {
         this.tgianvao = tgianvao;
     }
 
-    public String getTgianra() {
+    public byte[] getAnhBSXra() {
+        return anhBSXra;
+    }
+
+    public void setAnhBSXra(byte[] anhBSXra) {
+        this.anhBSXra = anhBSXra;
+    }
+
+    public Date getTgianra() {
         return tgianra;
     }
 
-    public void setTgianra(String tgianra) {
+    public void setTgianra(Date tgianra) {
         this.tgianra = tgianra;
-    }
-
-    public String getAnhBSX() {
-        return anhBSX;
-    }
-
-    public void setAnhBSX(String anhBSX) {
-        this.anhBSX = anhBSX;
     }
 
     @Override
     public String toString() {
-        return this.maBSX;
+        String tmp = this.maBSX;
+        if (this.tgianvao != null) {
+            tmp += " vào lúc " + TimestampConverter.toString(this.tgianvao);
+            if (this.tgianra != null) tmp += " ra lúc " + TimestampConverter.toString(this.tgianra);
+        }
+        return tmp;
     }
 }
