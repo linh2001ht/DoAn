@@ -62,31 +62,43 @@ public class ThongTinLichSuActivity extends AppCompatActivity {
 
 
         Intent receive = getIntent();
-        LichSuVaoRa lichSuVaoRa = (LichSuVaoRa) receive.getSerializableExtra("data");
-        if (lichSuVaoRa != null){
-            this.setTitle("Sửa lịch sử");
-            id = lichSuVaoRa.getID();
+        String bien = receive.getStringExtra("MaBSX");
+        if (bien != null) {
+            this.setTitle("Thêm lịch sử");
             int position = -1;
             for (LichSuVaoRa x: appDao.getAllLichSu()) {
                 position += 1;
-                if (x.getMaBSX().equals(lichSuVaoRa.getMaBSX())) break;
+                if (x.getMaBSX().equals(bien)) break;
             }
             lsMaBSX.setSelection(position);
-            lsGiaVe.setText(String.valueOf(lichSuVaoRa.getGiave()));
-            editTimeIn.setText(TimestampConverter.toString(lichSuVaoRa.getTgianvao()));
-            editTimeOut.setText(TimestampConverter.toString(lichSuVaoRa.getTgianra()));
-            byte[] imgIn = lichSuVaoRa.getAnhBSXvao();
-            if (imgIn != null){
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imgIn,0,imgIn.length);
-                imageViewIn.setImageBitmap(bitmap);
-            }
-            byte[] imgOut = lichSuVaoRa.getAnhBSXra();
-            if (imgOut != null){
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imgOut,0,imgOut.length);
-                imageViewOut.setImageBitmap(bitmap);
-            }
         } else {
-            this.setTitle("Thêm lịch sử");
+            LichSuVaoRa lichSuVaoRa = (LichSuVaoRa) receive.getSerializableExtra("data");
+            if (lichSuVaoRa != null) {
+                this.setTitle("Sửa lịch sử");
+                id = lichSuVaoRa.getID();
+                int position = -1;
+                for (LichSuVaoRa x : appDao.getAllLichSu()) {
+                    position += 1;
+                    if (x.getMaBSX().equals(lichSuVaoRa.getMaBSX())) break;
+                }
+                lsMaBSX.setSelection(position);
+                lsGiaVe.setText(String.valueOf(lichSuVaoRa.getGiave()));
+                editTimeIn.setText(TimestampConverter.toString(lichSuVaoRa.getTgianvao()));
+                editTimeOut.setText(TimestampConverter.toString(lichSuVaoRa.getTgianra()));
+                byte[] imgIn = lichSuVaoRa.getAnhBSXvao();
+                if (imgIn != null) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(imgIn, 0, imgIn.length);
+                    imageViewIn.setImageBitmap(bitmap);
+                }
+                byte[] imgOut = lichSuVaoRa.getAnhBSXra();
+                if (imgOut != null) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(imgOut, 0, imgOut.length);
+                    imageViewOut.setImageBitmap(bitmap);
+                }
+            }
+            else {
+                this.setTitle("Thêm lịch sử");
+            }
         }
 
         imageViewIn.setOnClickListener(view -> {

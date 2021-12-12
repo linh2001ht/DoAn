@@ -19,6 +19,9 @@ public interface AppDao {
     @Query("select * from ChuSoHuu where name like '%' || :name || '%'")
     public List<ChuSoHuu> getChuSoHuus(String name);
 
+    @Query("select * from ChuSoHuu where IDchusohuu =:IDchusohuu limit 1")
+    public ChuSoHuu findCSHbyID(int IDchusohuu);
+
     @Insert
     public void insertChuSoHuu(ChuSoHuu... chuSoHuus);
 

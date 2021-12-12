@@ -66,6 +66,7 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
         appDao = appDatabase.appDao();
 
         btnCamera.setOnClickListener(view -> {
+            tvBien.setText("");
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             // Ensure that there's a camera activity to handle the intent
             if (intent.resolveActivity(getPackageManager()) != null) {
@@ -87,6 +88,7 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
             }
         });
         btnGallery.setOnClickListener(v -> {
+            tvBien.setText("");
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(gallery, GALLERY_REQUEST_CODE);
         });
@@ -101,6 +103,7 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
 
                 builder.setPositiveButton("YES", (dialog, which) -> {
                     Intent intent = new Intent(NhanDienBienSoXeActivity.this, ThongTinBienSoXeActivity.class);
+                    intent.putExtra("data", new BienSoXe(bien, 0, 1));
                     startActivity(intent);
                     dialog.dismiss();
                 });
@@ -110,10 +113,13 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
             } else {
-                Toast.makeText(NhanDienBienSoXeActivity.this, "Biển số xe này có trong CSDL", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NhanDienBienSoXeActivity.this, "Biển số xe này có trong CSDL. Chu so huu: ", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NhanDienBienSoXeActivity.this, ThongTinLichSuActivity.class);
+                //intent.putExtra("data", appDao.findCSHbyID(appDao.findBymaBSX(bien).getIDChuSoHuu()));
+                intent.putExtra("MaBSX", bien);
+                startActivity(intent);
             }
         });
-
     }
 
     @Override
