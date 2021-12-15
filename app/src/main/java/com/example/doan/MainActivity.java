@@ -1,6 +1,7 @@
 package com.example.doan;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        appDatabase = AppDatabase.getInstance(this);
 //        appDao = appDatabase.appDao();
-
+//
 //        AsyncTask.execute(new Runnable() {
 //            @Override
 //            public void run() {

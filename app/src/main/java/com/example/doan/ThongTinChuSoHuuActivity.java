@@ -28,7 +28,7 @@ public class ThongTinChuSoHuuActivity extends AppCompatActivity {
     public static final int CSH_CAMERA_REQUEST_CODE = 999;
     public static final int CSH_GALLERY_REQUEST_CODE = 888;
     private EditText cshName, cshNgaySinh, cshPhone, cshAddress;
-    private RadioButton radioButtonMale;
+    private RadioButton radioButtonMale, radioButtonFemale;
     private int id;
     private ImageView cshImage;
 
@@ -40,6 +40,7 @@ public class ThongTinChuSoHuuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_thong_tin_chu_so_huu);
         cshName = findViewById(R.id.csh_name);
         radioButtonMale = findViewById(R.id.radioButton_male);
+        radioButtonFemale = findViewById(R.id.radioButton_female);
         cshNgaySinh = findViewById(R.id.csh_date);
         cshPhone = findViewById(R.id.csh_phone);
         cshAddress = findViewById(R.id.csh_address);
@@ -53,7 +54,8 @@ public class ThongTinChuSoHuuActivity extends AppCompatActivity {
             this.setTitle("Sửa chủ sở hữu");
             id = chuSoHuu.getIDchusohuu();
             cshName.setText(chuSoHuu.getName());
-            radioButtonMale.setChecked(chuSoHuu.getGioitinh());
+            if (chuSoHuu.getGioitinh()) radioButtonMale.setChecked(true);
+            else radioButtonFemale.setChecked(true);
             cshNgaySinh.setText(DateConverter.toString(chuSoHuu.getNgaysinh()));
             cshPhone.setText(chuSoHuu.getPhone());
             cshAddress.setText(chuSoHuu.getAddress());
