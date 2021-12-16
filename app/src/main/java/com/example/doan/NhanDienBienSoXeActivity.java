@@ -42,6 +42,8 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
     String currentPhotoPath;
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
+    public static final int BSX_REQUEST_CODE = 112;
+    public static final int LS_REQUEST_CODE = 115;
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseDatabase rootNode;
@@ -104,7 +106,7 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
                 builder.setPositiveButton("YES", (dialog, which) -> {
                     Intent intent = new Intent(NhanDienBienSoXeActivity.this, ThongTinBienSoXeActivity.class);
                     intent.putExtra("data", new BienSoXe(bien, 0, 1));
-                    startActivity(intent);
+                    startActivityForResult(intent, BSX_REQUEST_CODE);
                     dialog.dismiss();
                 });
 
@@ -113,11 +115,23 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
             } else {
-                Toast.makeText(NhanDienBienSoXeActivity.this, "Biển số "+bien+" có trong CSDL. Chủ sở hữu: "+ appDao.findCSHbyID(appDao.findBymaBSX(bien).getIDChuSoHuu()).getName(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(NhanDienBienSoXeActivity.this, ThongTinLichSuActivity.class);
-                //intent.putExtra("data", appDao.findCSHbyID(appDao.findBymaBSX(bien).getIDChuSoHuu()));
-                intent.putExtra("MaBSX", bien);
-                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(NhanDienBienSoXeActivity.this);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Biển số xe đã có trong CSDL. Chủ sở hữu "+appDao.findCSHbyID(appDao.findBymaBSX(bien).getIDChuSoHuu()).getName() +" Bạn có muốn thêm lịch sử?");
+
+                builder.setPositiveButton("YES", (dialog, which) -> {
+                    Intent intent = new Intent(NhanDienBienSoXeActivity.this, ThongTinLichSuActivity.class);
+                    intent.putExtra("MaBSX", bien);
+                    startActivityForResult(intent, LS_REQUEST_CODE);
+                    dialog.dismiss();
+                });
+
+                builder.setNegativeButton("NO", (dialog, which) -> dialog.dismiss());
+
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
     }
@@ -148,6 +162,15 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
             }
         }
 
+        if (requestCode == BSX_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            BienSoXe bienSoXe = (BienSoXe) data.getSerializableExtra("data");
+            appDao.insertBienSoXe(bienSoXe);
+        }
+
+        if (requestCode == LS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            LichSuVaoRa lichSuVaoRa = (LichSuVaoRa) data.getSerializableExtra("data");
+            appDao.insertLichSu(lichSuVaoRa);
+        }
 
     }
 
