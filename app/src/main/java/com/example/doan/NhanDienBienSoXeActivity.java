@@ -113,7 +113,7 @@ public class NhanDienBienSoXeActivity extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
             } else {
-                Toast.makeText(NhanDienBienSoXeActivity.this, "Biển số xe này có trong CSDL. Chu so huu: ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NhanDienBienSoXeActivity.this, "Biển số "+bien+" có trong CSDL.", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NhanDienBienSoXeActivity.this, ThongTinLichSuActivity.class);
                 //intent.putExtra("data", appDao.findCSHbyID(appDao.findBymaBSX(bien).getIDChuSoHuu()));
                 intent.putExtra("MaBSX", bien);

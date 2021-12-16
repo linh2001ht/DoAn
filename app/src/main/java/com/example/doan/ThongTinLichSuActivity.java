@@ -66,7 +66,7 @@ public class ThongTinLichSuActivity extends AppCompatActivity {
         if (bien != null) {
             this.setTitle("Thêm lịch sử");
             int position = -1;
-            for (LichSuVaoRa x: appDao.getAllLichSu()) {
+            for (BienSoXe x: appDao.getAllBienSoXe()) {
                 position += 1;
                 if (x.getMaBSX().equals(bien)) break;
             }
@@ -77,7 +77,7 @@ public class ThongTinLichSuActivity extends AppCompatActivity {
                 this.setTitle("Sửa lịch sử");
                 id = lichSuVaoRa.getID();
                 int position = -1;
-                for (LichSuVaoRa x : appDao.getAllLichSu()) {
+                for (BienSoXe x : appDao.getAllBienSoXe()) {
                     position += 1;
                     if (x.getMaBSX().equals(lichSuVaoRa.getMaBSX())) break;
                 }
